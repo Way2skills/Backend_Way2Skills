@@ -17,7 +17,7 @@ app = FastAPI()
 
 
 origins = [
-    "http://localhost:5173/"
+    "https://www.way2skills.com/"
 ]
 
 app.add_middleware(

@@ -2,14 +2,23 @@ from fastapi import FastAPI, HTTPException, Form, File, UploadFile, Depends
 from firebase_admin import credentials, firestore, initialize_app
 from datetime import date
 import base64
-from pydantic import BaseModel, EmailStr
-from typing import Optional, List
+from pydantic import  EmailStr
+from typing import  List
 from fastapi.middleware.cors import CORSMiddleware
 from modals import RegistrationResponse
+from dotenv import load_dotenv
+import os
+import json
+
+load_dotenv()
+
+firebase_json = os.getenv("FIREBASE_CREDENTIALS")
 
 # Initialize Firebase
-cred = credentials.Certificate("firebase_credentials.json")
-initialize_app(cred)
+if firebase_json:
+    firebase_config = json.loads(firebase_json)
+    cred = credentials.Certificate(firebase_config)
+    initialize_app(cred)
 db = firestore.client()
 collection_name = "course_registrations"
 

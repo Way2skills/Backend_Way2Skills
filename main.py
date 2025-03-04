@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException, Form, File, UploadFile, Depends
 from firebase_admin import credentials, firestore, initialize_app
-from datetime import date
+from datetime import date, datetime
 import base64
 from pydantic import  EmailStr
 from typing import  List
@@ -85,3 +85,45 @@ def get_registrations():
         return registrations
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/reviews/")
+def get_reviews():
+    try:
+        docs = db.collection(reviews_collection).stream()
+
+        reviews = []
+        for doc in docs:
+            data = doc.to_dict()
+
+            created_at = data.get("createdAt")
+
+            # Handle createdAt directly (convert to string if needed)
+            if isinstance(created_at, datetime):
+                created_at = created_at.isoformat()
+            elif isinstance(created_at, str):
+                # Optional: Try parsing back if you trust string input
+                try:
+                    created_at = parse_human_date(created_at).isoformat()
+                except ValueError:
+                    pass  # Keep original string if parsing fails (fallback)
+
+            reviews.append({
+                "comment": data.get("comment"),
+                "createdAt": created_at,
+                "name": data.get("name"),
+                "rating": data.get("rating")
+            })
+
+        return reviews
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+def parse_human_date(date_str: str) -> datetime:
+    """ Convert 'February 25, 2025 at 11:50:31 AM UTC+5:30' into datetime object """
+    try:
+        return datetime.strptime(date_str, "%B %d, %Y at %I:%M:%S %p UTC%z")
+    except ValueError:
+        raise ValueError(f"Invalid date format: {date_str}")
+

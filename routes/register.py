@@ -50,7 +50,7 @@ def get_registrations():
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@router.delete("/{record_id}")
+@router.delete("/registrations/{record_id}")
 def delete_registration(record_id: str):
     try:
         doc_ref = db.collection(collection_name).document(record_id)

@@ -11,9 +11,10 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "https://way2skills.netlify.app/",
-        "https://www.way2skills.com/",
-        "https://way2skills.com/"
+        "https://www.way2skills.com",
+        "https://way2skills.com",
     ],
+   
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

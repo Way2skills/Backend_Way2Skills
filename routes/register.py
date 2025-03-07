@@ -42,7 +42,7 @@ async def register_user(
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@router.get("/registrations/", response_model=List[RegistrationResponse])
+@router.get("/registrations", response_model=List[RegistrationResponse])
 def get_registrations():
     try:
         docs = db.collection(collection_name).stream()

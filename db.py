@@ -1,6 +1,6 @@
 import os
 import json
-from firebase_admin import credentials, firestore, initialize_app
+from firebase_admin import credentials, firestore, initialize_app, _apps
 from dotenv import load_dotenv
 
 # Load environment variables
@@ -13,15 +13,15 @@ if not firebase_json:
     raise ValueError("FIREBASE_CREDENTIALS not found in .env")
 
 # Parse JSON string into a Python dict
-firebase_config = json.loads(firebase_json)
+try:
+    firebase_config = json.loads(firebase_json)
+except json.JSONDecodeError as e:
+    raise ValueError(f"Invalid FIREBASE_CREDENTIALS JSON format: {e}")
 
-# Write the parsed dict to a temporary file
-with open("firebase_config.json", "w") as f:
-    json.dump(firebase_config, f)
-
-# Use the file to initialize Firebase Admin SDK
-cred = credentials.Certificate("firebase_config.json")
-initialize_app(cred)
+# Initialize Firebase only if not already initialized
+if not _apps:
+    cred = credentials.Certificate(firebase_config)
+    initialize_app(cred)
 
 # Initialize Firestore client
 db = firestore.client()

@@ -23,6 +23,6 @@ app.add_middleware(
 def greet():
     return {"PING": "PONG"}
 
-app.include_router(register.router, prefix="/register", tags=["Register"])
-app.include_router(admin.router, prefix="/admin", tags=["Admin"])
-app.include_router(review.router, prefix="/reviews", tags=["Reviews"])
+app.include_router(register.router, prefix="/api/v1/register", tags=["Register"])
+app.include_router(admin.router, prefix="/api/v1/admin", tags=["Admin"])
+app.include_router(review.router, prefix="/api/v1/reviews", tags=["Reviews"])

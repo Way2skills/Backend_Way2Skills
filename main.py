@@ -9,11 +9,12 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "https://way2skills.netlify.app/",
-        "https://www.way2skills.com",
-        "https://way2skills.com",
-    ],
+    # allow_origins=[
+    #     "https://way2skills.netlify.app/",
+    #     "https://www.way2skills.com",
+    #     "https://way2skills.com",
+    # ],
+    allow_origins = ["*"],
    
     allow_credentials=True,
     allow_methods=["*"],
